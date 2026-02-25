@@ -7,7 +7,9 @@ import yaml
 import pandas as DataFrame
 
 from us_visa.exception import UsVisaException
-from us_visa.logger import logging
+from us_visa.logger import structlog
+
+logging = structlog.get_logger(__name__)
 
 
 def read_yaml_file(file_path:str) -> dict:

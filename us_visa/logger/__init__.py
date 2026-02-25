@@ -1,19 +1,34 @@
-import os
+import warnings
 import logging
+import structlog
 
-from from_root import from_root
-from datetime import datetime
 
-LOG_FILE = f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
+warnings.filterwarnings(
+    "ignore",
+    category=UserWarning,
+    message=".*analyzers are deprecated.*"
+)
+warnings.filterwarnings(
+    "ignore",
+    category=UserWarning,
+    message=".*model profiles are deprecated.*"
+)
 
-log_dir = 'logs'
+logging.getLogger("evidently").setLevel(logging.WARNING)
 
-logs_path = os.path.join(from_root(),log_dir,LOG_FILE)
-
-os.makedirs(log_dir,exist_ok=True)
-
-logging.basicConfig(
-    filename=logs_path,
-    format="[%(asctime)s ] %(name)s - %(levelname)s - %(message)s",
-    level=logging.DEBUG,
+structlog.configure(
+        processors=[
+            structlog.contextvars.merge_contextvars,
+            structlog.stdlib.add_log_level,
+            structlog.stdlib.PositionalArgumentsFormatter(),
+            structlog.processors.TimeStamper(fmt="%H:%M:%S"),
+            structlog.processors.StackInfoRenderer(),
+            structlog.processors.format_exc_info,
+            structlog.processors.UnicodeDecoder(),
+            structlog.dev.ConsoleRenderer(colors=True)
+        ],
+    wrapper_class=structlog.make_filtering_bound_logger(logging.NOTSET),
+    context_class=dict,
+    logger_factory=structlog.PrintLoggerFactory(),
+    cache_logger_on_first_use=False
 )

@@ -1,6 +1,5 @@
 import sys
 from us_visa.exception import UsVisaException
-from us_visa.logger import logging
 from us_visa.components.data_ingestion import DataIngestion
 from us_visa.components.data_validation import DataValidation
 
@@ -8,6 +7,11 @@ from us_visa.entity.config_entity import (DataIngestionConfig,
                                           DataValidationConfig)
 from us_visa.entity.artifact_entity import (DataIngestionArtifact,
                                             DataValidationArtifact)
+
+from us_visa.logger import structlog
+
+logging = structlog.get_logger(__name__)
+
 
 class TrainPipeline:
     def __init__(self):
