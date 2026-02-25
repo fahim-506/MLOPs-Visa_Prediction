@@ -33,6 +33,7 @@ class USvisaData:
             else:
                 collection = self.mongo_client[database_name][collection_name]
 
+            # print(f"collection name and data : {list(collection.find())}")        Debugging
             df = pd.DataFrame(list(collection.find()))
             if '_id' in df.columns.to_list():
                 df = df.drop(columns = ['_id'],axis=1)
