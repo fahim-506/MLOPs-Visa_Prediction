@@ -6,9 +6,6 @@ __pycache__/
 # C extensions
 *.so
 *.DS_Store
-.visa
-*.env
-catboost_info
 
 # Distribution / packaging
 .Python
@@ -218,6 +215,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-
 artifact/*
-visa/
+catboost_info
+visa
