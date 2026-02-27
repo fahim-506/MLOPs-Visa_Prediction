@@ -41,12 +41,12 @@ class ModelTrainer:
         """
         try:
             logging.info("Using neuro_mf to get best model object and report")
-            model_factory = ModelFactory(model_config_path=self.model_trainer_config.model_config_file_path)
+            model_factory = ModelFactory(model_config_path=self.model_training_config.model_config_file_path)
             
             x_train, y_train, x_test, y_test = train[:, :-1], train[:, -1], test[:, :-1], test[:, -1]
 
             best_model_detail = model_factory.get_best_model(
-                X=x_train,y=y_train,base_accuracy=self.model_trainer_config.expected_accuracy
+                X=x_train,y=y_train,base_accuracy=self.model_training_config.expected_accuracy
             )
             model_obj = best_model_detail.best_model
 
@@ -82,7 +82,7 @@ class ModelTrainer:
             preprocessing_obj = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
 
 
-            if best_model_detail.best_score < self.model_trainer_config.expected_accuracy:
+            if best_model_detail.best_score < self.model_training_config.expected_accuracy:
                 logging.info("No best model found with score more than base score")
                 raise Exception("No best model found with score more than base score")
 
@@ -90,10 +90,10 @@ class ModelTrainer:
                                        trained_model_object=best_model_detail.best_model)
             logging.info("Created usvisa model object with preprocessor and model")
             logging.info("Created best model file path.")
-            save_object(self.model_trainer_config.trained_model_file_path, usvisa_model)
+            save_object(self.model_training_config.trained_model_file_path, usvisa_model)
 
             model_trainer_artifact = ModelTrainerArtifact(
-                trained_model_file_path=self.model_trainer_config.trained_model_file_path,
+                trained_model_file_path=self.model_training_config.trained_model_file_path,
                 metric_artifact=metric_artifact,
             )
             logging.info(f"Model trainer artifact: {model_trainer_artifact}")
